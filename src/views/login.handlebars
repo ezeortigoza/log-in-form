@@ -1,5 +1,5 @@
 <div>
-    <h1>Ingresa tus datos!</h1>
+    <h1>Por favor logueate!</h1>
 
     <form id="loginForm">
         <label>Nombre</label>
@@ -8,7 +8,13 @@
         <input type="email" name="email">
         <label>Password</label>
         <input type="password" name="password">
-        <input type="submit">
+        <input type="submit" id="login">
+        <script type="text/javascript">
+          document.getElementById('login').onclick = function (){
+            location.href = "http://localhost:8080/current"
+          }
+        
+        </script>
     </form>
 </div>
 

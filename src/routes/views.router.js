@@ -25,7 +25,7 @@ router.use(session({
     resave:false,
     saveUninitialized:false
 }))
-router.get('/loginn',(req,res)=>{
+/* router.get('/loginn',(req,res)=>{
     const name = "carlos";
     const password = "123";
     const email = "carlos@gmail.com";
@@ -35,7 +35,7 @@ router.get('/loginn',(req,res)=>{
         email
     }
     res.send(`Logueado :) ${name} !!`);
-})
+}) */
  router.get('/visited',(req,res)=>{
     if(req.session.counter){
         res.send(`Visitado ${++req.session.counter} veces`);
@@ -46,16 +46,11 @@ router.get('/loginn',(req,res)=>{
 })
 
 router.get('/loger',(req,res)=>{
-    const email = req.body.email
-    const name = req.body.name
-    const password = req.body.password
-    req.session.user ={
-        email,
-        name,
-        password,
-    }
-    
     res.render('login');
+}) 
+ router.get('/current',(req,res)=>{
+     if(!req.session.user) return res.redirect('/loger')
+    res.render('current',{user:req.session.user})
 }) 
 
 export default router;

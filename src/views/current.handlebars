@@ -1,6 +1,11 @@
 <div>
-    {{#each newUser}}
-    <h1>Hola {{this.name}}</h1>
-    {{/each}}
+    <h1>Bienvenido{{user.name}}!!</h1>
+<div>
+  <button id="logout">Logout</button>
+  <script type="text/javascript">
+    document.getElementById("logout").onclick = function (){
+        location.href = "http://localhost:8080/loger";
+    }
+  </script>
 </div>
-<script src="js/register.js"></script>
+</div>
