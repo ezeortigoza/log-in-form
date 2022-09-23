@@ -6,6 +6,8 @@ import sessionsRouter from './routes/sessions.router.js';
 import mongoose from 'mongoose';
 import storage from 'session-file-store';
 import session from 'express-session';
+import initializePassport from './config/passport.config.js';
+import passport from 'passport';
 
 const app = express();
 const FileStorage = storage(session);
@@ -18,3 +20,6 @@ app.set('view engine','handlebars');
 app.use('/',viewsRouter);
 app.use('/api/sessions',sessionsRouter);
 const server = app.listen(8080,(console.log("Welcome")));
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());

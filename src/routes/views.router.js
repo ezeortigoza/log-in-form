@@ -2,19 +2,21 @@ import { Router } from "express";
 import usersService from "../models/user.js";
 import session from 'express-session';
 import Mongostore from 'connect-mongo';
+import passport from "passport";
 
 const router = Router();
 
 
-router.get('/', (req,res)=>{
-    res.render('register');
-})
 /* router.get('/welcome',async(req,res)=>{
     let newUser = await usersService.findById("6320a4553e1a70ea625d6cf7")
 //   res.render('welcome',{
         newUser,
     })
 }) */
+
+router.get('/',(req,res)=>{
+    res.render('register')
+})
 
 router.use(session({
     store:Mongostore.create({

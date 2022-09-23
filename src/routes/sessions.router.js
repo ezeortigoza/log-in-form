@@ -1,49 +1,30 @@
 import { Router } from "express";
 import usersService from "../models/user.js";
 import { createHash } from "../utils.js";
+import passport from 'passport';
 const router = Router();
 
-router.post('/register',async(req,res)=>{
-    const {name,email,password} = req.body;
-    if(!name||!email||!password) return res.status(400).send({status:"error",error:"Incomplete values"});
-    //¿El usuario ya esta en la base de datos?
-    const exists = await usersService.findOne({email:email});
-    if(exists) return res.status(400).send({status:"error",error:"User already exists"});
-    //Insertamos en la base
-    const newUser = {
-        name,
-        email,
-        password:createHash(password)
-    }
-    let result = await usersService.create(newUser);
-    res.send(result);
+router.post('/register', passport.authenticate('register',{failureRedirect: 'api/sessions/registerFail'}),async(req,res)=>{
+  console.log(req.user);
+  res.send({status:"success",payload:req.user._id});
+})
+router.get('/registerFail',(req,res)=>{
+  console.log("something is wrong");
+  res.status(500).send({status:"error",error:""})
 })
 
-router.post("/loger", async (req, res) => {
-    const {name, email, password } = req.body;
-    if (!name|| !email || !password)
-      return res
-        .status(400)
-        .send({ status: "error", message: "email and password are required" });
-    // Verify if the user exists with that user and pasword in the database:
-    const user = await usersService.findOne({ email: email });
-    if (!user)
-      return res.status(400).send({
-        status: "error",
-        message: `User identified as ${email} does not exist`,
-      });
-    if (user.password != password)
-      return res
-        .status(400)
-        .send({ status: "error", message: "Incorrect password" });
+router.post("/loger", passport.authenticate('login',{failureRedirect:'/api/sessions/loginfail'}) ,async (req, res) => {
+
     req.session.user = {
       // Create in the session cookie a user (this one must not carry important information)
-      email,
+       name:req.user.name,
+      email:req.user.email,
+      id:req.user._id,
       role: "user",
     };
     res.send({
       status: "success",
-      message: `Welcome ${email}, you are now logged in.`,
+      message: `Welcome ${req.user.email}, you are now logged in.`,
     });
   });
   
@@ -71,5 +52,18 @@ router.post("/loger", async (req, res) => {
     });
     res.send({ status: "success", message: "Logged out!" });
   });
+
+  router.get('/github',passport.authenticate('github',{scope:[]}),async(req,res)=>{
+    //Este punto de aqui se encarga de abrir la aplicacion en el navegador
+  })
+
+  router.get('/githubcallback',passport.authenticate('github'),(req,res)=>{
+    req.session.user = {
+      name:req.user.name,
+      email:req.user.email,
+      id:req.user._id
+    }
+    res.redirect('/current');
+  })
   
 export default router;
