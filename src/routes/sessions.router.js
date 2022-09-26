@@ -17,7 +17,7 @@ router.post("/loger", passport.authenticate('login',{failureRedirect:'/api/sessi
 
     req.session.user = {
       // Create in the session cookie a user (this one must not carry important information)
-       name:req.user.name,
+      name:req.user.name,
       email:req.user.email,
       id:req.user._id,
       role: "user",
