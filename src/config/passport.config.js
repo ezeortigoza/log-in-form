@@ -33,7 +33,7 @@ const initializePassport = () =>{
         const user = await usersService.findOne({ email: email });
         if (!user)
           return done(null,false,{message:"Incorrect credentials"});
-        if (user.password === password)
+        if (user.password == password)
          return done(null,false,{message:"Incorrect password"});
          return done(null,user);
     }))

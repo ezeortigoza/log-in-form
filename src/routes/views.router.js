@@ -3,6 +3,7 @@ import usersService from "../models/user.js";
 import session from 'express-session';
 import Mongostore from 'connect-mongo';
 import passport from "passport";
+import {fork} from 'child_process'
 
 const router = Router();
 
@@ -54,5 +55,36 @@ router.get('/loger',(req,res)=>{
      if(!req.session.user) return res.redirect('/loger')
     res.render('current',{user:req.session.user})
 }) 
+router.get('/info',(req,res)=>{
+    let version = process.version;
+    let platform = process.platform;
+    let title = process.title;
+    let id = process.pid;
+    let argv = process.argv
+    let memory = process.memoryUsage;
+    let cwd = process.cwd();
+    res.send(`Version: ${version}
+    <br></br>
+    Platform: ${platform}
+    <br></br>
+    Title: ${title}
+    <br></br>
+    Id: ${id}
+    <br></br>
+    Argv: ${argv}
+    <br></br>
+    Memory : ${memory}
+    <br></br>
+    Cwd: ${cwd}
+    `)
+})
+
+router.get('/api/randoms',(req,res)=>{
+    const child = fork('./src/fork.js');
+    child.send('Welcome');
+    child.on('message',val=>{
+        res.send(`El resultado es ${val}`);
+    })
+})
 
 export default router;
