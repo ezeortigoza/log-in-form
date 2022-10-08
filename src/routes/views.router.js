@@ -79,12 +79,20 @@ router.get('/info',(req,res)=>{
     `)
 })
 
-router.get('/api/randoms',(req,res)=>{
-    const child = fork('./src/fork.js');
-    child.send('Welcome');
-    child.on('message',val=>{
-        res.send(`El resultado es ${val}`);
+const scriptPath =  './src/fork.js';
+
+router.get('/api/randoms', (req, res) => {
+    const cant = req.query.cant || ( 100 * 1000 * 1000 ) // 100000000
+
+    const computo  = fork(scriptPath)
+    computo.send(cant)
+
+    computo.on('message', (resultado) => {
+        res.json({
+            result: resultado
+        })
     })
 })
+
 
 export default router;
