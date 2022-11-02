@@ -10,6 +10,7 @@ import initializePassport from './config/passport.config.js';
 import passport from 'passport';
 import minimist from 'minimist';
 import config from './config/config.js';
+import os from 'os';
 
 
 /* const {
@@ -26,7 +27,8 @@ const config = {
 }
 
 console.log(config); */
-
+const cpus = os.cpus.length;
+console.log(cpus);
 const app = express();
 const FileStorage = storage(session);
 const connection = mongoose.connect('mongodb+srv://MONGODB:123@mongodb.mgpqn0y.mongodb.net/mongosh?retryWrites=true&w=majority')
@@ -38,7 +40,8 @@ app.set('view engine','handlebars');
 app.use('/',viewsRouter);
 app.use('/api/sessions',sessionsRouter);
 console.log(config.app)
-const server = app.listen(8080,(console.log('Welcome')));
+const PORT = process.env.PORT||8080
+app.listen(PORT,(console.log(`Listening on ${PORT}`)));
 initializePassport();
 app.use(passport.initialize());
 app.use(passport.session());

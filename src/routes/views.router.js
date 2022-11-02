@@ -79,7 +79,7 @@ router.get('/info',(req,res)=>{
     `)
 })
 
-const scriptPath =  './src/fork.js';
+const scriptPath = './src/fork.js';
 
 router.get('/api/randoms', (req, res) => {
     const cant = req.query.cant || ( 100 * 1000 * 1000 ) // 100000000
